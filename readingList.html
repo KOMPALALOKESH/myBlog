@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading List - Portfolio</title>
+    <!-- Add hidden input field for data persistence -->
+    <input type="hidden" id="persistentDataContainer" value="" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+
+        .search-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-bar {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+        }
+
+        .search-bar:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.25);
+        }
+
+        .add-button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .add-button:hover {
+            background-color: #3367d6;
+        }
+
+        .content {
+            margin-top: 90px;
+            padding: 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Collapsed Card Styles --- */
+        .card {
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            height: 60px;
+            max-height: 200px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 40px 0 10px;
+            overflow: hidden;
+            /* Smooth transition for all relevant properties */
+            transition:
+                height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            height: auto;
+            min-height: 100px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+            background-color: #f5faff;
+            padding: 0 40px 10px 10px;
+        }
+
+        .card-menu {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            z-index: 10;
+            transition: top 0.4s ease;
+        }
+
+        .card-title-container {
+            width: 100%;
+            padding: 10px;
+            transition: padding 0.4s ease;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* 🔄 Smooth transition for color, spacing, and wrapping */
+            transition: color 0.4s ease, text-decoration 0.3s ease, white-space 0.4s ease;
+        }
+
+        .card:hover .card-title {
+            white-space: normal;
+            /* allow wrapping */
+            overflow: visible;
+            text-overflow: unset;
+            text-decoration: underline;
+            color: #0b57d0;
+        }
+
+        /* Hide iframe & fallback */
+        .embed-container,
+        .card-fallback {
+            display: none !important;
+        }
+
+        .menu-button {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-button:hover {
+            background: rgba(240, 240, 240, 0.9);
+        }
+
+        .menu-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .menu-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #555;
+            border-radius: 50%;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            min-width: 120px;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown-item.delete {
+            color: #ff4444;
+        }
+
+        .card.hidden {
+            display: none;
+        }
+
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #777;
+        }
+
+        /* Highlight for duplicate card */
+        .card.highlight {
+            animation: highlightFlash 2s ease;
+        }
+
+        @keyframes highlightFlash {
+            0% {
+                background-color: #d2e3fc;
+            }
+
+            50% {
+                background-color: #ffffff;
+            }
+
+            100% {
+                background-color: #d2e3fc;
+            }
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-container {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-cancel {
+            background-color: #f1f1f1;
+            color: #333;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="Search embedded links..." id="searchBar">
+        <button class="add-button" id="addCardBtn">+ Add</button>
+    </div>
+
+    <div class="content">
+        <div class="card-grid" id="cardGrid">
+            <!-- Cards will be loaded dynamically -->
+        </div>
+        <div class="no-results" id="noResults">
+            No results found. Try a different search term.
+        </div>
+    </div>
+
+    <!-- Add Card Modal -->
+    <div class="modal-overlay" id="addCardModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Card</h3>
+                <button class="close-button" id="closeModalCard">&times;</button>
+            </div>
+            <form id="addCardForm">
+                <div class="form-group">
+                    <label for="cardTitle">Title</label>
+                    <input type="text" class="form-control" id="cardTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="cardLink">Link URL</label>
+                    <input type="url" class="form-control" id="cardLink" placeholder="https://example.com" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelCardBtn">Cancel</button>
+                    <button type="submit" class="btn-submit">Add Card</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add this for localStorage -->
+    <script>
+        // Function to save data to localStorage
+        function saveToLocalStorage(data) {
+            try {
+                localStorage.setItem('embedCardsCollection', JSON.stringify(data));
+                return true;
+            } catch (e) {
+                console.error('Error saving to localStorage:', e);
+                return false;
+            }
+        }
+
+        // Function to load data from localStorage
+        function loadFromLocalStorage() {
+            try {
+                const data = localStorage.getItem('embedCardsCollection');
+                return data ? JSON.parse(data) : null;
+            } catch (e) {
+                console.error('Error loading from localStorage:', e);
+                return null;
+            }
+        }
+    </script>
+
+    <script>
+        function isValidURL(url) {
+            try {
+                new URL(url);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Create persistence storage if it doesn't exist
+            if (!document.getElementById('persistentDataContainer')) {
+                const dataContainer = document.createElement('input');
+                dataContainer.type = 'hidden';
+                dataContainer.id = 'persistentDataContainer';
+                dataContainer.value = '';
+                document.body.appendChild(dataContainer);
+            }
+
+            // Load saved cards
+            loadSavedData();
+
+            // Add card button click
+            document.getElementById('addCardBtn').addEventListener('click', function () {
+                document.getElementById('addCardModal').style.display = 'flex';
+            });
+
+            // Close card modal
+            document.getElementById('closeModalCard').addEventListener('click', function () {
+                document.getElementById('addCardModal').style.display = 'none';
+            });
+
+            document.getElementById('cancelCardBtn').addEventListener('click', function () {
+                document.getElementById('addCardModal').style.display = 'none';
+            });
+
+            // Prevent duplicate links and highlight if exists
+            document.getElementById('addCardForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const cardTitle = document.getElementById('cardTitle').value.trim();
+                const cardLink = document.getElementById('cardLink').value.trim();
+
+                if (!cardTitle || !cardLink || !isValidURL(cardLink)) {
+                    alert('Please enter a valid title and URL.');
+                    return;
+                }
+
+                // Check if link already exists
+                const existingCard = Array.from(document.querySelectorAll('.card'))
+                    .find(card => card.getAttribute('data-link') === cardLink);
+
+                if (existingCard) {
+                    // Close modal
+                    document.getElementById('addCardModal').style.display = 'none';
+                    document.getElementById('addCardForm').reset();
+
+                    // Scroll to existing card and highlight it
+                    existingCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                    existingCard.classList.add('highlight');
+                    setTimeout(() => {
+                        existingCard.classList.remove('highlight');
+                    }, 2000);
+
+                    return;
+                }
+
+                // If new, create the card
+                createCard(cardTitle, cardLink);
+                document.getElementById('addCardForm').reset();
+                document.getElementById('addCardModal').style.display = 'none';
+                saveAllData();
+            });
+
+            // Search functionality
+            const searchBar = document.getElementById('searchBar');
+            searchBar.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                const cards = document.querySelectorAll('.card');
+                let hasResults = false;
+
+                cards.forEach(card => {
+                    const title = card.getAttribute('data-title').toLowerCase();
+                    const link = card.getAttribute('data-link').toLowerCase();
+
+                    if (title.includes(searchTerm) || link.includes(searchTerm)) {
+                        card.classList.remove('hidden');
+                        hasResults = true;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                // Show/hide no results message
+                document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+            });
+
+            // Click outside modal to close
+            window.onclick = function (event) {
+                const cardModal = document.getElementById('addCardModal');
+                if (event.target === cardModal) {
+                    cardModal.style.display = 'none';
+                }
+
+                // Close any open dropdown menus when clicking elsewhere
+                if (!event.target.matches('.menu-button') && !event.target.closest('.menu-button')) {
+                    const dropdowns = document.querySelectorAll('.dropdown-menu');
+                    dropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                    });
+                }
+            };
+
+            // Restore scroll position
+            const scrollY = localStorage.getItem('scrollY');
+            if (scrollY !== null) window.scrollTo(0, parseInt(scrollY));
+        });
+
+        // Save scroll position
+        window.addEventListener('scroll', () => {
+            localStorage.setItem('scrollY', window.scrollY);
+        });
+
+        // Create a new card element
+        function createCard(title, link) {
+            const cardGrid = document.getElementById('cardGrid');
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-title', title);
+            card.setAttribute('data-link', link);
+            card.style.cursor = 'pointer';
+
+            card.addEventListener('click', function (e) {
+                // Only open link if not clicking on menu
+                if (!e.target.closest('.card-menu')) {
+                    window.open(link, '_blank');
+                }
+            });
+
+            // Card menu (optional delete button)
+            const cardMenu = document.createElement('div');
+            cardMenu.className = 'card-menu';
+            const menuButton = document.createElement('button');
+            menuButton.className = 'menu-button';
+            menuButton.innerHTML = `
+                <div class="menu-dots">
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                </div>
+            `;
+
+            const dropdownMenu = document.createElement('div');
+            dropdownMenu.className = 'dropdown-menu';
+
+            const deleteItem = document.createElement('div');
+            deleteItem.className = 'dropdown-item delete';
+            deleteItem.textContent = 'Delete';
+            deleteItem.addEventListener('click', function (e) {
+                e.stopPropagation();
+                card.remove();
+                saveAllData();
+            });
+
+            dropdownMenu.appendChild(deleteItem);
+            cardMenu.appendChild(menuButton);
+            cardMenu.appendChild(dropdownMenu);
+            card.appendChild(cardMenu);
+
+            menuButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    if (menu !== dropdownMenu) {
+                        menu.classList.remove('show');
+                    }
+                });
+            });
+
+            // Title only (no preview)
+            const titleContainer = document.createElement('div');
+            titleContainer.className = 'card-title-container';
+            titleContainer.innerHTML = `<div class="card-title">${title}</div>`;
+
+            card.appendChild(titleContainer);
+            cardGrid.appendChild(card);
+
+            return card;
+        }
+
+        // Create fallback content for cards where iframe cannot be displayed
+        function createFallbackContent(title, link) {
+            return `
+                <div class="card-fallback">
+                    <a href="${link}" target="_blank" class="card-link">${link}</a>
+                </div>
+            `;
+        }
+
+        // Save all cards
+        function saveAllData() {
+            const allCards = [];
+
+            document.querySelectorAll('.card').forEach(card => {
+                allCards.push({
+                    title: card.getAttribute('data-title'),
+                    link: card.getAttribute('data-link')
+                });
+            });
+
+            // Use hidden input field in the DOM for persistence
+            let dataContainer = document.getElementById('persistentDataContainer');
+            if (!dataContainer) {
+                dataContainer = document.createElement('input');
+                dataContainer.type = 'hidden';
+                dataContainer.id = 'persistentDataContainer';
+                document.body.appendChild(dataContainer);
+            }
+            dataContainer.value = JSON.stringify(allCards);
+
+            // Save to localStorage for better persistence
+            saveToLocalStorage(allCards);
+        }
+
+        // Load saved data
+        function loadSavedData() {
+            const cardGrid = document.getElementById('cardGrid');
+            // Clear all existing cards
+            cardGrid.innerHTML = '';
+
+            // First try localStorage (most reliable for GitHub Pages)
+            const localStorageData = loadFromLocalStorage();
+
+            if (localStorageData && localStorageData.length > 0) {
+                localStorageData.forEach(cardData => {
+                    // Create card
+                    createCard(cardData.title, cardData.link);
+                });
+                return;
+            }
+
+            // Fall back to hidden input if localStorage fails
+            const dataContainer = document.getElementById('persistentDataContainer');
+            const savedData = dataContainer && dataContainer.value ? dataContainer.value : null;
+
+            if (savedData) {
+                const cards = JSON.parse(savedData);
+
+                cards.forEach(cardData => {
+                    // Create card
+                    createCard(cardData.title, cardData.link);
+                });
+
+                // Also save to localStorage for future use
+                saveToLocalStorage(cards);
+            }
+            // No default cards - start with empty collection
+        }
+
+
+
+        // --------------------------------------------------------------------------------------------------------------------------
+        // // Function to save data to localStorage
+        // function saveToLocalStorage(data) {
+        //     localStorage.setItem('readingList', JSON.stringify(data));
+        // }
+
+        // // Function to load data from localStorage
+        // function loadFromLocalStorage() {
+        //     const data = localStorage.getItem('readingList');
+        //     return data ? JSON.parse(data) : [];
+        // }
+
+        // const cardGrid = document.getElementById('cardGrid');
+        // const addCardBtn = document.getElementById('addCardBtn');
+        // const addCardModal = document.getElementById('addCardModal');
+        // const closeModalCard = document.getElementById('closeModalCard');
+        // const cancelCardBtn = document.getElementById('cancelCardBtn');
+        // const addCardForm = document.getElementById('addCardForm');
+        // const cardTitleInput = document.getElementById('cardTitle');
+        // const cardLinkInput = document.getElementById('cardLink');
+        // const searchBar = document.getElementById('searchBar');
+        // const noResults = document.getElementById('noResults');
+
+        // let cards = loadFromLocalStorage();
+
+        // function createCardElement(card) {
+        //     const cardElement = document.createElement('div');
+        //     cardElement.className = 'card';
+        //     cardElement.innerHTML = `
+        //     <div class="card-menu">
+        //         <button class="menu-button" onclick="toggleDropdown(this)">
+        //             <div class="menu-dots">
+        //                 <div class="menu-dot"></div>
+        //                 <div class="menu-dot"></div>
+        //                 <div class="menu-dot"></div>
+        //             </div>
+        //         </button>
+        //         <div class="dropdown-menu">
+        //             <div class="dropdown-item delete" onclick="deleteCard('${card.id}')">Delete</div>
+        //         </div>
+        //     </div>
+        //     <div class="card-title-container">
+        //         <a href="${card.link}" class="card-title" target="_blank">${card.title}</a>
+        //     </div>
+        // `;
+        //     cardElement.dataset.title = card.title.toLowerCase();
+        //     cardGrid.appendChild(cardElement);
+        // }
+
+        // function renderCards() {
+        //     cardGrid.innerHTML = '';
+        //     const filtered = cards.filter(c => c.title.toLowerCase().includes(searchBar.value.toLowerCase()));
+        //     if (filtered.length === 0) {
+        //         noResults.style.display = 'block';
+        //     } else {
+        //         noResults.style.display = 'none';
+        //         filtered.forEach(createCardElement);
+        //     }
+        // }
+
+        // function generateId() {
+        //     return '_' + Math.random().toString(36).substr(2, 9);
+        // }
+
+        // function toggleDropdown(btn) {
+        //     const dropdown = btn.nextElementSibling;
+        //     document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        //         if (menu !== dropdown) menu.classList.remove('show');
+        //     });
+        //     dropdown.classList.toggle('show');
+        // }
+
+        // function deleteCard(id) {
+        //     cards = cards.filter(c => c.id !== id);
+        //     saveToLocalStorage(cards);
+        //     renderCards();
+        // }
+
+        // addCardBtn.addEventListener('click', () => {
+        //     addCardModal.style.display = 'flex';
+        // });
+
+        // closeModalCard.addEventListener('click', () => {
+        //     addCardModal.style.display = 'none';
+        // });
+
+        // cancelCardBtn.addEventListener('click', () => {
+        //     addCardModal.style.display = 'none';
+        // });
+
+        // addCardForm.addEventListener('submit', (e) => {
+        //     e.preventDefault();
+        //     const title = cardTitleInput.value.trim();
+        //     const link = cardLinkInput.value.trim();
+
+        //     if (cards.some(c => c.title === title)) {
+        //         alert('Card with this title already exists!');
+        //         return;
+        //     }
+
+        //     const newCard = {
+        //         id: generateId(),
+        //         title,
+        //         link
+        //     };
+
+        //     cards.push(newCard);
+        //     saveToLocalStorage(cards);
+        //     renderCards();
+        //     addCardModal.style.display = 'none';
+        //     addCardForm.reset();
+        // });
+
+        // searchBar.addEventListener('input', renderCards);
+
+        // // Initial render
+        // renderCards();
+
+        // // Hide dropdowns when clicking outside
+        // document.addEventListener('click', function (e) {
+        //     if (!e.target.closest('.card-menu')) {
+        //         document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+        //     }
+        // });
+    </script>
+</body>
+
+</html>

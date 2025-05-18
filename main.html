@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lokesh Kompala - Portfolio</title>
+    <style>
+        :root {
+            --github-bg: #0d1117;
+            --github-text: #c9d1d9;
+            --github-heading: #f0f6fc;
+            --github-accent: #58a6ff;
+            --github-border: #30363d;
+            --github-button: #238636;
+            --github-button-hover: #2ea043;
+            --github-secondary: #21262d;
+        }
+
+        /* Add smooth scrolling behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Optional: Add scroll padding to account for fixed header */
+        html {
+            scroll-padding-top: 80px;
+            /* Adjust this value based on your navbar height */
+        }
+
+        /* Optional: Add active state for nav links */
+        .nav-link.active {
+            color: var(--github-accent);
+        }
+
+        .nav-link.active::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        body {
+            background-color: var(--github-bg);
+            color: var(--github-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Section */
+        .header {
+            padding: 40px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #040d21 0%, #0d1117 100%);
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #58a6ff, #bc8cff, #ff9069);
+            z-index: 1;
+        }
+
+        /* ====== NEW PROFILE LAYOUT ====== */
+        .profile {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+            gap: 40px;
+            margin-top: 3em;
+        }
+
+        /* Profile image as vertical rectangle, right side */
+        .profile-image {
+            width: 300px;
+            height: 450px;
+            border-radius: 10px;
+            border: 4px solid var(--github-accent);
+            margin-bottom: 0;
+            background-color: var(--github-secondary);
+            overflow: hidden;
+            position: relative;
+            order: 2;
+            /* Move image to the right */
+        }
+
+        /* Profile content container */
+        .profile-content {
+            flex: 1;
+            order: 1;
+            /* Content on the left */
+        }
+
+        /* Make the image responsive */
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Adjust for mobile devices */
+        @media (max-width: 768px) {
+            .profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-image {
+                order: 1;
+                /* Image first on mobile */
+                margin-bottom: 20px;
+            }
+
+            .profile-content {
+                order: 2;
+                /* Content below image on mobile */
+            }
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--github-heading);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--github-accent);
+            animation: fadeInUp 1s ease;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .social-link {
+            color: var(--github-text);
+            font-size: 1.5rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            color: var(--github-accent);
+            transform: translateY(-3px);
+        }
+
+        .social-link svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            animation: fadeInUp 1.4s ease;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--github-button);
+            color: white;
+            border: 1px solid rgba(240, 246, 252, 0.1);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--github-button-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--github-text);
+            border: 1px solid var(--github-border);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--github-secondary);
+            border-color: var(--github-accent);
+            color: var(--github-accent);
+        }
+
+        /* Animated background shapes */
+        .shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            border-radius: 50%;
+            background: var(--github-accent);
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -100px;
+            animation: float 15s infinite linear;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: 10%;
+            animation: float 20s infinite linear reverse;
+            background: linear-gradient(145deg, var(--github-accent), #bc8cff);
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 20%;
+            right: -50px;
+            animation: float 18s infinite linear;
+            background: linear-gradient(145deg, #bc8cff, #ff9069);
+        }
+
+        /* Main Content Sections */
+        .section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--github-border);
+            position: relative;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--github-heading);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--github-accent);
+        }
+
+        /* About Me Section */
+        .about-content {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .skills-container {
+            flex: 1;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .skill-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            background-color: var(--github-secondary);
+            border: 1px solid var(--github-border);
+            color: var(--github-text);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-3px);
+            background-color: rgba(88, 166, 255, 0.1);
+            border-color: var(--github-accent);
+            color: var(--github-accent);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background-color: var(--github-secondary);
+            border-radius: 6px;
+            padding: 20px;
+            border: 1px solid var(--github-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            border-color: var(--github-accent);
+        }
+
+        .project-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--github-accent), #bc8cff);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--github-heading);
+        }
+
+        .project-description {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .project-tag {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            background-color: rgba(88, 166, 255, 0.1);
+            border-radius: 4px;
+            color: var(--github-accent);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Experience Section */
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+            padding-left: 20px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            background-color: var(--github-border);
+        }
+
+
+        .experience-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .experience-dot {
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--github-accent);
+            border: 4px solid var(--github-bg);
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .experience-content {
+            background-color: var(--github-secondary);
+            border-radius: 6px;
+            padding: 20px;
+            border: 1px solid var(--github-border);
+            transition: all 0.3s ease;
+        }
+
+        .experience-header {
+            margin-bottom: 15px;
+        }
+
+        .experience-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--github-heading);
+        }
+
+        .experience-company {
+            font-size: 1rem;
+            color: var(--github-accent);
+            margin-bottom: 5px;
+        }
+
+        .experience-date {
+            font-size: 0.85rem;
+            color: var(--github-text);
+            opacity: 0.8;
+        }
+
+        .experience-bullets {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+
+        .experience-bullets li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .experience-bullets li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--github-accent);
+        }
+
+        /* Hover Effects */
+        .experience-item:hover .experience-content {
+            transform: translateY(-5px);
+            border-color: var(--github-accent);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .experience-item:hover .experience-dot {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .experience-item {
+                padding-left: 20px;
+            }
+
+            .timeline::before {
+                left: 0;
+            }
+
+            .experience-dot {
+                left: -9px;
+            }
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .contact-card {
+            background-color: var(--github-secondary);
+            border-radius: 6px;
+            padding: 20px;
+            border: 1px solid var(--github-border);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            border-color: var(--github-accent);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--github-accent);
+            margin-bottom: 15px;
+        }
+
+        .contact-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--github-heading);
+        }
+
+        .contact-info {
+            word-break: break-word;
+        }
+
+        .contact-info a {
+            color: var(--github-accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 30px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--github-text);
+            background-color: var(--github-secondary);
+        }
+
+        .footer-text {
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-link {
+            color: var(--github-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--github-accent);
+        }
+
+        .heart {
+            color: #f85149;
+            animation: heartBeat 1s infinite;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(30px, 30px) rotate(180deg);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+
+            14% {
+                transform: scale(1.3);
+            }
+
+            28% {
+                transform: scale(1);
+            }
+
+            42% {
+                transform: scale(1.3);
+            }
+
+            70% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .projects-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Navigation */
+        .navbar {
+            padding: 15px 0;
+            background-color: var(--github-bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--github-border);
+            backdrop-filter: blur(10px);
+            background-color: rgba(13, 17, 23, 0.8);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--github-heading);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--github-text);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--github-accent);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--github-accent);
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--github-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--github-bg);
+                border-bottom: 1px solid var(--github-border);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">Lokesh Kompala</a>
+            <button class="mobile-menu-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="nav-links">
+                <a href="#about" class="nav-link">About Me</a>
+                <a href="#experience" class="nav-link">My Journey</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="readingList.html" class="nav-link">Reading List</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="container">
+            <div class="profile">
+                <div class="profile-content">
+                    <h1 class="name">Lokesh Kompala</h1>
+                    <p class="title">Assistant Systems Engineer Trainee @TCS</p>
+                    <div class="social-links">
+                        <a href="https://github.com/KOMPALALOKESH" class="social-link" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                            GitHub
+                        </a>
+                        <a href="https://www.linkedin.com/in/kompalalokesh/" class="social-link" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a href="https://x.com/Lokesh12006066" class="social-link" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                                </path>
+                            </svg>
+                            Twitter
+                        </a>
+                    </div>
+                    <div class="cta-buttons">
+                        <a href="#" class="btn btn-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            Download Resume
+                        </a>
+                    </div>
+                </div>
+                <div class="profile-image">
+                    <img src="photo.png" alt="Lokesh Kompala">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Hey @everyone! I'm a passionate software engineer with experience in building web applications
+                        and
+                        services. I specialize in front-end development and have a strong background in creating
+                        responsive, user-friendly interfaces.</p>
+                    <p>With a focus on clean code and optimal user experience, I strive to create applications that not
+                        only function well but are also a joy to use. I'm constantly learning and exploring new
+                        technologies to stay up-to-date with the ever-evolving tech landscape.</p>
+                    <p>When I'm not coding, you can find me exploring new hiking trails, experimenting with photography,
+                        or diving into a good book. I believe in the power of technology to solve real-world problems
+                        and am always excited to take on new challenges.</p>
+                </div>
+                <div class="skills-container">
+                    <h3>Technical Skills</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">HTML5</span>
+                        <span class="skill-tag">CSS3</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">RESTful APIs</span>
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Responsive Design</span>
+                        <span class="skill-tag">UI/UX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+        <div class="container">
+            <h2 class="section-title">The Path Where I Am Today!</h2>
+            <div class="timeline">
+                <!-- Experience 1 -->
+                <div class="experience-item">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="experience-title">Assistant Systems Engineer Trainee</h3>
+                            <p class="experience-company">Tata Consultancy Services</p>
+                            <p class="experience-date">April 2025 - Present</p>
+                        </div>
+                        <div class="experience-details">
+                            <ul class="experience-bullets">
+                                <!-- <li>Contributed to the enhancement of A-grid dataset processing in the Parcels library, ensuring consistency with other grid types and <span style="color: #ff9069; font-weight: bold;">improving overall data handling.</span></li> -->
+                                <!-- <li>Designed and implemented comprehensive <span style="color: #ff9069; font-weight: bold;">unit tests</span> to validate and ensure the reliability of new features within the codebase.</li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 1 -->
+                <div class="experience-item">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="experience-title">Open Source volunteer</h3>
+                            <p class="experience-company">Ocean Parcels Github</p>
+                            <p class="experience-date">January 2021 - April 2024</p>
+                        </div>
+                        <div class="experience-details">
+                            <ul class="experience-bullets">
+                                <li>Contributed to the enhancement of A-grid dataset processing in the Parcels library, ensuring consistency with other grid types and <span style="color: #ff9069; font-weight: bold;">improving overall data handling.</span></li>
+                                <li>Designed and implemented comprehensive <span style="color: #ff9069; font-weight: bold;">unit tests</span> to validate and ensure the reliability of new features within the codebase.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 1 -->
+                <div class="experience-item">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="experience-title">B.Tech - Computer Science and Engineering(CSE)</h3>
+                            <p class="experience-company">Sri Venkateswara University (SVU)</p>
+                            <p class="experience-date">January 2021 - April 2024</p>
+                        </div>
+                        <div class="experience-details">
+                            <ul class="experience-bullets">
+                                <li>Graduated with a Bachelor of Technology in Computer Science and Engineering from SVU.</li>
+                                <li>Achieved an outstanding <span style="color: #ff9069; font-weight: bold;">8.4 CGPA</span>, graduating with distinction and consistently maintaining academic excellence throughout the program.</li>
+                                <li>Actively participated in competitive coding contests, academic events, and served as the team lead for the final year capstone project.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 2 -->
+                <div class="experience-item">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="experience-title">Intermediate Education</h3>
+                            <p class="experience-company">Narayana Junior College</p>
+                            <p class="experience-date">June 2018 - April 2020</p>
+                        </div>
+                        <div class="experience-details">
+                            <ul class="experience-bullets">
+                                <li>Completed Intermediate Education at Narayana Junior College, Dhanalakshmipuram Campus, Nellore District.</li>
+                                <li>Achieved an aggregate score of <span style="color: #ff9069; font-weight: bold;">94% (943/1000)</span> in 11th and 12th grades.</li>
+                                <li>Ranked in the <span style="color: #ff9069; font-weight: bold;">top 2% in EAPCET (General Rank: 2674)</span> after Intermediate.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 3 -->
+                <div class="experience-item">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="experience-title">Secondary Education</h3>
+                            <p class="experience-company">Narayana E.M. High School</p>
+                            <p class="experience-date"> - April 2018</p>
+                        </div>
+                        <div class="experience-details">
+                            <ul class="experience-bullets">
+                                <li>Completed my secondary education at my hometown, Venkatagiri.</li>
+                                <li>Achieved a perfect <span style="color: #ff9069; font-weight: bold;">10.0/10.0 CGPA</span> in my 10th class public examinations.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <h3 class="project-title">E-commerce Platform</h3>
+                    <p class="project-description">A full-stack e-commerce application with user authentication, product
+                        management, and payment processing capabilities.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">React</span>
+                        <span class="project-tag">Node.js</span>
+                        <span class="project-tag">MongoDB</span>
+                        <span class="project-tag">Stripe</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn btn-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                            Code
+                        </a>
+                        <a href="#" class="btn btn-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                            Code
+                        </a>
+                        <a href="#" class="btn btn-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                            Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card">
+                    <h3 class="project-title">AI Chat Application</h3>
+                    <p class="project-description">An AI-powered chat application with natural language processing
+                        capabilities for smart responses and task automation.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">TensorFlow</span>
+                        <span class="project-tag">Flask</span>
+                        <span class="project-tag">WebSockets</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="#" class="btn btn-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                            Code
+                        </a>
+                        <a href="#" class="btn btn-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                            Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Add this script at the end of your body tag -->
+    <script>
+
+        // Replace the existing script at the end of your body tag with this code
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle functionality
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (mobileMenuBtn && navLinks) {
+                mobileMenuBtn.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default action
+                    e.stopPropagation(); // Stop event bubbling
+
+                    navLinks.classList.toggle('active');
+
+                    // Change menu button to X when menu is open
+                    this.innerHTML = navLinks.classList.contains('active')
+                        ? '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'
+                        : '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+
+                    console.log('Menu toggled:', navLinks.classList.contains('active'));
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function (event) {
+                    if (navLinks.classList.contains('active') &&
+                        !navLinks.contains(event.target) &&
+                        !mobileMenuBtn.contains(event.target)) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+                    }
+                });
+
+                // Close menu when a nav link is clicked
+                const links = document.querySelectorAll('.nav-link');
+                links.forEach(link => {
+                    link.addEventListener('click', function () {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+                    });
+                });
+            } else {
+                console.error('Mobile menu elements not found');
+            }
+        });
+    </script>
+</body>
+
+</html>
